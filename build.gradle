@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'build-dashboard'
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+}
+
+dependencies {
+  testCompile group: 'junit', name: 'junit', version: '4.+'
+  compile group: 'com.sparkjava', name: 'spark-core', version: '2.2'
+  compile group: 'com.sparkjava', name: 'spark-template-velocity', version: '2.0.0'
+  compile group: 'com.mycompany', name: 'HackerNewsUutiset', version: '1.0-SNAPSHOT'
+  testCompile group: 'org.fluentlenium', name: 'fluentlenium-core', version: '0.10.3'
+  testCompile group: 'org.fluentlenium', name: 'fluentlenium-assertj', version: '0.10.3'
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'com.mycompany.Main'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    with jar
+}
